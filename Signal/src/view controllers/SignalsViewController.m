@@ -39,10 +39,16 @@ NSString *const SignalsViewControllerSegueShowIncomingCall = @"ShowIncomingCallS
 @property (nonatomic) long inboxCount;
 @property (nonatomic, retain) UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) id previewingContext;
+
+// Dependencies
+
 @property (nonatomic, readonly, strong) AccountManager *accountManager;
 @property (nonatomic, readonly) OWSContactsManager *contactsManager;
+@property (nonatomic, readonly) ExperienceUpgradeFinder *experienceUpgradeFinder;
 @property (nonatomic, readonly) TSMessagesManager *messagesManager;
 @property (nonatomic, readonly, strong) OWSMessageSender *messageSender;
+@property (nonatomic, readonly) TSStorageManager *storageManager;
+
 
 @end
 
@@ -74,10 +80,12 @@ NSString *const SignalsViewControllerSegueShowIncomingCall = @"ShowIncomingCallS
 
 - (void)commonInit
 {
+    _storageManager = [TSStorageManager sharedManager];
     _accountManager = [Environment getCurrent].accountManager;
     _contactsManager = [Environment getCurrent].contactsManager;
     _messagesManager = [TSMessagesManager sharedManager];
     _messageSender = [Environment getCurrent].messageSender;
+    _experienceUpgradeFinder = [[ExperienceUpgradeFinder alloc] initWithStorageManager:_storageManager];
 }
 
 - (void)awakeFromNib
@@ -305,6 +313,24 @@ NSString *const SignalsViewControllerSegueShowIncomingCall = @"ShowIncomingCallS
     [super viewDidAppear:animated];
     if (self.newlyRegisteredUser) {
         [self didAppearForNewlyRegisteredUser];
+    } else {
+        [self displayAnyUnseenUpgradeExperience];
+    }
+}
+
+- (void)displayAnyUnseenUpgradeExperience
+{
+    AssertIsOnMainThread();
+
+    ExperienceUpgrade *unseen = [self.experienceUpgradeFinder firstUnseen];
+    if (unseen) {
+        ExperienceUpgradeViewController *experienceUpgradeViewController = [[ExperienceUpgradeViewController alloc] initWithExperienceUpgrade:unseen];
+        [self presentViewController:experienceUpgradeViewController animated:YES completion:^{
+            [self.editingDbConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                // DO NOT COMMIT. uncomment first...
+                // [unseen markAsSeenWithTransaction:transaction];
+            }];
+        }];
     }
 }
 
