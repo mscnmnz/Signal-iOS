@@ -322,9 +322,13 @@ NSString *const SignalsViewControllerSegueShowIncomingCall = @"ShowIncomingCallS
 {
     AssertIsOnMainThread();
 
-    ExperienceUpgrade *unseen = [self.experienceUpgradeFinder firstUnseen];
-    if (unseen) {
-        ExperienceUpgradeViewController *experienceUpgradeViewController = [[ExperienceUpgradeViewController alloc] initWithExperienceUpgrade:unseen];
+    __block NSArray<ExperienceUpgrade *> *unseenUpgrades;
+    [self.editingDbConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        unseenUpgrades = [self.experienceUpgradeFinder allUnseenWithTransaction:transaction];
+    }];
+
+    if (unseenUpgrades.count > 0) {
+        ExperienceUpgradeViewController *experienceUpgradeViewController = [[ExperienceUpgradeViewController alloc] initWithExperienceUpgrades:unseenUpgrades];
         [self presentViewController:experienceUpgradeViewController animated:YES completion:^{
             [self.editingDbConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                 // DO NOT COMMIT. uncomment first...

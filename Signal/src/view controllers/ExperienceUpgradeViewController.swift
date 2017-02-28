@@ -7,21 +7,11 @@ import Foundation
 class ExperienceUpgradeViewController: UIViewController {
     let TAG = "[ExperienceUpgradeViewController]"
 
-    let experienceUpgrade: ExperienceUpgrade
-    var hasConstraints = false
-
-    var splashContainerView: UIView!
-    var splashView: UIView!
-    var titleLabel: UILabel!
-    var bodyLabel: UILabel!
-    var splashImageView: UIImageView!
-    var nextButton: UIButton!
-    var previousButton: UIButton!
-    var dismissButton: UIButton!
+    let experienceUpgrades: [ExperienceUpgrade]
 
     // MARK: - Initializers
-    required init(experienceUpgrade: ExperienceUpgrade) {
-        self.experienceUpgrade = experienceUpgrade
+    required init(experienceUpgrades: [ExperienceUpgrade]) {
+        self.experienceUpgrades = experienceUpgrades
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -29,7 +19,7 @@ class ExperienceUpgradeViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         assert(false)
         // This should never happen, but so as not to explode we give some bogus data
-        self.experienceUpgrade = ExperienceUpgrade(uniqueId: "unknown-experience-upgrade-id", title: "New Feature", body: "Bug fixes and performance improvements")
+        self.experienceUpgrades = [ExperienceUpgrade()]
         super.init(coder: aDecoder)
     }
 
@@ -37,8 +27,6 @@ class ExperienceUpgradeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        createViews()
-        updateViewConstraints()
         addDismissGesture()
     }
 
@@ -48,38 +36,75 @@ class ExperienceUpgradeViewController: UIViewController {
         view.addGestureRecognizer(swipeGesture)
     }
 
-    func createViews() {
-        // TODO transparent?
-        view.backgroundColor = UIColor.ows_materialBlue()
+    func buildSlideView(header: String, body: String, image: UIImage) -> UIView {
+        let slideView = UIView()
 
-        splashContainerView = UIView()
-        view.addSubview(splashContainerView)
-//        splashContainerView.backgroundColor = UIColor.ows_materialBlue()
-
-        splashView = UIView()
-        splashContainerView.addSubview(splashView)
-
-        titleLabel = UILabel()
-        splashView.addSubview(titleLabel)
-        titleLabel.text = experienceUpgrade.title
+        // Title label
+        let titleLabel = UILabel()
+        slideView.addSubview(titleLabel)
+        titleLabel.text = header
         titleLabel.textAlignment = .center
-        titleLabel.font = UIFont.ows_lightFont(withSize:ScaleFromIPhone5To7Plus(26, 32))
+        titleLabel.font = UIFont.ows_lightFont(withSize: ScaleFromIPhone5To7Plus(26, 32))
         titleLabel.textColor = UIColor.white
         titleLabel.minimumScaleFactor = 0.5
         titleLabel.adjustsFontSizeToFitWidth = true;
 
-        bodyLabel = UILabel()
-        splashView.addSubview(bodyLabel)
-        bodyLabel.text = experienceUpgrade.body
-        bodyLabel.font = UIFont.ows_lightFont(withSize:ScaleFromIPhone5To7Plus(16, 18))
+        // Title label layout
+        titleLabel.autoPinWidthToSuperview()
+        titleLabel.autoPinEdge(toSuperviewEdge: .top)
+
+        // Body label
+        let bodyLabel = UILabel()
+        slideView.addSubview(bodyLabel)
+        bodyLabel.text = body
+        bodyLabel.font = UIFont.ows_lightFont(withSize: ScaleFromIPhone5To7Plus(16, 18))
         bodyLabel.textColor = UIColor.white
         bodyLabel.numberOfLines = 0
 
-        splashImageView = UIImageView(image:#imageLiteral(resourceName: "video_calling_splash1"))
-        splashView.addSubview(splashImageView)
-        splashImageView.contentMode = .scaleAspectFit
+        // Body label layout
+        bodyLabel.autoPinWidthToSuperview()
 
-        previousButton = UIButton()
+        // Image
+        let imageView = UIImageView(image: image)
+        slideView.addSubview(imageView)
+        imageView.contentMode = .scaleAspectFit
+
+        // Image layout
+        imageView.autoPinWidthToSuperview()
+        imageView.autoSetDimension(.height, toSize: ScaleFromIPhone5To7Plus(200, 350))
+        imageView.autoPinEdge(.top, to: .bottom, of: titleLabel, withOffset: ScaleFromIPhone5To7Plus(10, 14))
+        imageView.autoPinEdge(.bottom, to: .top, of: bodyLabel, withOffset: ScaleFromIPhone5To7Plus(10, 14))
+
+        return slideView
+    }
+
+    override func loadView() {
+        self.view = UIView()
+        view.backgroundColor = UIColor.ows_materialBlue()
+
+        let splashContainerView = UIView()
+        view.addSubview(splashContainerView)
+        splashContainerView.autoPinWidthToSuperview()
+        splashContainerView.autoVCenterInSuperview()
+
+        let splashView = UIView()
+        splashContainerView.addSubview(splashView)
+        let containerPadding = ScaleFromIPhone5To7Plus(12, 18)
+        splashView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: containerPadding,
+                                                                   left: containerPadding,
+                                                                   bottom: containerPadding,
+                                                                   right: containerPadding))
+
+        let slidesView = UIView()
+        splashView.addSubview(slidesView)
+
+        // TODO stack these horizontally so they can be panned through
+        for experienceUpgrade in experienceUpgrades {
+            slidesView.addSubview(buildSlideView(header: experienceUpgrade.title, body: experienceUpgrade.body, image: experienceUpgrade.image))
+        }
+
+        // Previous button
+        let previousButton = UIButton()
         splashView.addSubview(previousButton)
         previousButton.setTitleColor(UIColor.white, for: .normal)
         previousButton.accessibilityLabel = NSLocalizedString("UPGRADE_CAROUSEL_PREVIOUS_BUTTON", comment: "accessibility label for arrow in slideshow")
@@ -87,7 +112,12 @@ class ExperienceUpgradeViewController: UIViewController {
         previousButton.titleLabel?.font = UIFont.ows_lightFont(withSize:ScaleFromIPhone5To7Plus(24, 48))
         previousButton.addTarget(self, action:#selector(didTapPreviousButton), for: .touchUpInside)
 
-        nextButton = UIButton()
+        // Previous button layout
+        previousButton.autoPinEdge(toSuperviewEdge: .left)
+        previousButton.autoAlignAxis(.horizontal, toSameAxisOf: slidesView)
+
+        // Next button
+        let nextButton = UIButton()
         splashView.addSubview(nextButton)
         nextButton.setTitleColor(UIColor.white, for: .normal)
         nextButton.accessibilityLabel = NSLocalizedString("UPGRADE_CAROUSEL_NEXT_BUTTON", comment: "accessibility label for arrow in slideshow")
@@ -95,50 +125,23 @@ class ExperienceUpgradeViewController: UIViewController {
         nextButton.titleLabel?.font = UIFont.ows_lightFont(withSize:ScaleFromIPhone5To7Plus(24, 48))
         nextButton.addTarget(self, action:#selector(didTapNextButton), for: .touchUpInside)
 
-        dismissButton = UIButton()
+        // Next button layout
+        nextButton.autoPinEdge(toSuperviewEdge: .right)
+        nextButton.autoAlignAxis(.horizontal, toSameAxisOf: slidesView)
+
+        // Dismiss button
+        let dismissButton = UIButton()
         splashView.addSubview(dismissButton)
         dismissButton.setTitle(NSLocalizedString("DISMISS_BUTTON_TEXT", comment: ""), for: .normal)
         dismissButton.addTarget(self, action:#selector(didTapDismissButton), for: .touchUpInside)
 
+        // Dismiss button layout
+        dismissButton.autoPinWidthToSuperview()
+        dismissButton.autoPinEdge(.top, to: .bottom, of: slidesView, withOffset: ScaleFromIPhone5(4) + containerPadding)
+        dismissButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: ScaleFromIPhone5(4))
+
         // Debug
         splashView.addRedBorderRecursively()
-    }
-
-    override func updateViewConstraints() {
-        if !hasConstraints {
-            hasConstraints = true
-
-            splashContainerView.autoPinWidthToSuperview()
-            splashContainerView.autoVCenterInSuperview()
-
-            let containerPadding = ScaleFromIPhone5To7Plus(12, 18)
-            splashView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: containerPadding,
-                                                                       left: containerPadding,
-                                                                       bottom: containerPadding,
-                                                                       right: containerPadding))
-
-            nextButton.autoPinEdge(toSuperviewEdge: .right)
-            nextButton.autoAlignAxis(.horizontal, toSameAxisOf: splashImageView)
-
-            previousButton.autoPinEdge(toSuperviewEdge: .left)
-            previousButton.autoAlignAxis(.horizontal, toSameAxisOf: splashImageView)
-
-            titleLabel.autoPinWidthToSuperview()
-            titleLabel.autoPinEdge(toSuperviewEdge: .top)
-
-            splashImageView.autoPinWidthToSuperview()
-            splashImageView.autoSetDimension(.height, toSize: ScaleFromIPhone5To7Plus(200, 350))
-            splashImageView.autoPinEdge(.top, to: .bottom, of: titleLabel, withOffset:containerPadding)
-
-            bodyLabel.autoPinWidthToSuperview()
-            bodyLabel.autoPinEdge(.top, to: .bottom, of: splashImageView, withOffset:containerPadding)
-
-            dismissButton.autoPinWidthToSuperview()
-            dismissButton.autoPinEdge(.top, to: .bottom, of: bodyLabel, withOffset:ScaleFromIPhone5(4) + containerPadding)
-            dismissButton.autoPinEdge(toSuperviewEdge: .bottom, withInset:ScaleFromIPhone5(4))
-        }
-
-        super.updateViewConstraints()
     }
 
     // MARK: - Actions
