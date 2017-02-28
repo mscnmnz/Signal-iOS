@@ -83,16 +83,16 @@ class ExperienceUpgradeViewController: UIViewController {
         splashView.addSubview(previousButton)
         previousButton.setTitleColor(UIColor.white, for: .normal)
         previousButton.accessibilityLabel = NSLocalizedString("UPGRADE_CAROUSEL_PREVIOUS_BUTTON", comment: "accessibility label for arrow in slideshow")
-        previousButton.setTitle("◀", for: .normal)
-        previousButton.titleLabel?.font = UIFont.ows_lightFont(withSize:ScaleFromIPhone5To7Plus(24, 32))
+        previousButton.setTitle("◂", for: .normal)
+        previousButton.titleLabel?.font = UIFont.ows_lightFont(withSize:ScaleFromIPhone5To7Plus(24, 48))
         previousButton.addTarget(self, action:#selector(didTapPreviousButton), for: .touchUpInside)
 
         nextButton = UIButton()
         splashView.addSubview(nextButton)
         nextButton.setTitleColor(UIColor.white, for: .normal)
         nextButton.accessibilityLabel = NSLocalizedString("UPGRADE_CAROUSEL_NEXT_BUTTON", comment: "accessibility label for arrow in slideshow")
-        nextButton.setTitle("▶", for: .normal)
-        nextButton.titleLabel?.font = UIFont.ows_lightFont(withSize:ScaleFromIPhone5To7Plus(24, 32))
+        nextButton.setTitle("▸", for: .normal)
+        nextButton.titleLabel?.font = UIFont.ows_lightFont(withSize:ScaleFromIPhone5To7Plus(24, 48))
         nextButton.addTarget(self, action:#selector(didTapNextButton), for: .touchUpInside)
 
         dismissButton = UIButton()
@@ -119,6 +119,9 @@ class ExperienceUpgradeViewController: UIViewController {
 
             nextButton.autoPinEdge(toSuperviewEdge: .right)
             nextButton.autoAlignAxis(.horizontal, toSameAxisOf: splashImageView)
+
+            previousButton.autoPinEdge(toSuperviewEdge: .left)
+            previousButton.autoAlignAxis(.horizontal, toSameAxisOf: splashImageView)
 
             titleLabel.autoPinWidthToSuperview()
             titleLabel.autoPinEdge(toSuperviewEdge: .top)

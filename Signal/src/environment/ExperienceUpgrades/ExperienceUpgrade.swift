@@ -14,6 +14,10 @@ class ExperienceUpgrade: TSYapDatabaseObject {
         self.body = body
         super.init(uniqueId: uniqueId)
     }
+
+    override required init(uniqueId: String) {
+        super.init(uniqueId: uniqueId)
+    }
     
     required init!(coder: NSCoder!) {
         super.init(coder: coder)
