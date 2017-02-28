@@ -8,10 +8,15 @@ class ExperienceUpgradeFinder: NSObject {
     public let TAG = "[ExperienceUpgradeFinder]"
 
     // Keep these ordered by increasing uniqueId.
-    private var allExperienceUpgrades = [ExperienceUpgrade(uniqueId: "x002",
+    private var allExperienceUpgrades = [ExperienceUpgrade(uniqueId: "z001",
                                                            title: NSLocalizedString("UPGRADE_EXPERIENCE_VIDEO_TITLE", comment: "Header for upgrade experience"),
-                                                           body: NSLocalizedString("UPGRADE_EXPERIENCE_VIDEO_DESCRIPTION", comment: "Description of video calling experience to upgrading (existing) users"),
-                                                           image: #imageLiteral(resourceName: "video_calling_splash1") )]
+                                                           body: NSLocalizedString("UPGRADE_EXPERIENCE_VIDEO_DESCRIPTION", comment: "Description of video calling to upgrading (existing) users"),
+                                                           image: #imageLiteral(resourceName: "introductory_splash_video_calling") ),
+                                         ExperienceUpgrade(uniqueId: "z002",
+                                                           title: NSLocalizedString("UPGRADE_EXPERIENCE_CALLKIT_TITLE", comment: "Header for upgrade experience"),
+                                                           body: NSLocalizedString("UPGRADE_EXPERIENCE_CALLKIT_DESCRIPTION", comment: "Description of CallKit to upgrading (existing) users"),
+                                                           image: #imageLiteral(resourceName: "introductory_splash_callkit") )]
+
     // MARK: - Dependencies
 
     private let storageManager: TSStorageManager

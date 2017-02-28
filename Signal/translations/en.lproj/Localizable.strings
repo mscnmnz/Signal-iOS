@@ -949,10 +949,19 @@
 /* No comment provided by engineer. */
 "UPDATE_BUTTON_TITLE" = "Update";
 
-/* accessability label for slide */
-"UPGRADE_CAROUSEL_NEXT_BUTTON" = "Show Next";
+/* accessibility label for arrow in slideshow */
+"UPGRADE_CAROUSEL_NEXT_BUTTON" = "Show next";
 
-/* Description of video calling experience to upgrading (existing) users */
+/* accessibility label for arrow in slideshow */
+"UPGRADE_CAROUSEL_PREVIOUS_BUTTON" = "Show previous";
+
+/* Description of CallKit to upgrading (existing) users */
+"UPGRADE_EXPERIENCE_CALLKIT_DESCRIPTION" = "Answer calls directly from your lockscreen. No more swiping required!\n What's more? We've anonymized caller details to ensure you're not leaking data about who you're talking to.\n Read more in your privacy settings.";
+
+/* Header for upgrade experience */
+"UPGRADE_EXPERIENCE_CALLKIT_TITLE" = "Answer Calls With One Touch";
+
+/* Description of video calling to upgrading (existing) users */
 "UPGRADE_EXPERIENCE_VIDEO_DESCRIPTION" = "Signal now supports secure video calling. Just start a call like normal, then tap the camera button and wave hello.";
 
 /* Header for upgrade experience */

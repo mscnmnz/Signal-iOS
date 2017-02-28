@@ -4,7 +4,7 @@
 
 import Foundation
 
-class ExperienceUpgradeViewController: UIViewController {
+class ExperienceUpgradeViewController: UIViewController, UIScrollViewDelegate {
     let TAG = "[ExperienceUpgradeViewController]"
 
     let experienceUpgrades: [ExperienceUpgrade]
@@ -86,6 +86,7 @@ class ExperienceUpgradeViewController: UIViewController {
         return slideView
     }
 
+    var carouselView: UIScrollView!
     override func loadView() {
         self.view = UIView()
         view.backgroundColor = UIColor.ows_materialBlue()
@@ -94,25 +95,47 @@ class ExperienceUpgradeViewController: UIViewController {
         view.addSubview(splashContainerView)
         splashContainerView.autoPinWidthToSuperview()
         splashContainerView.autoVCenterInSuperview()
+        splashContainerView.autoSetDimension(.height, toSize: ScaleFromIPhone5To7Plus(500, 800))
 
         let splashView = UIView()
         splashContainerView.addSubview(splashView)
         splashView.autoPinEdgesToSuperviewEdges()
 
-        let carouselView = UIView()
+        let carouselView = UIScrollView()
+        carouselView.delegate = self
+        self.carouselView = carouselView
         splashView.addSubview(carouselView)
+        self.carouselView.isPagingEnabled = true
+        carouselView.showsHorizontalScrollIndicator = false
+        carouselView.showsVerticalScrollIndicator = false
+
         let containerPadding = ScaleFromIPhone5To7Plus(12, 24)
         carouselView.autoPinEdge(toSuperviewEdge: .left, withInset: containerPadding)
         carouselView.autoPinEdge(toSuperviewEdge: .top, withInset: containerPadding)
         carouselView.autoPinEdge(toSuperviewEdge: .right, withInset: containerPadding)
 
-        // TODO stack these horizontally so they can be panned through
+        // Build slides for carousel
+        var previousSlideView: UIView?
         for experienceUpgrade in experienceUpgrades {
             let slideView = buildSlideView(header: experienceUpgrade.title, body: experienceUpgrade.body, image: experienceUpgrade.image)
             self.slideViews.append(slideView)
             carouselView.addSubview(slideView)
-            slideView.autoPinEdgesToSuperviewEdges()
+
+            slideView.autoPinEdge(toSuperviewEdge: .top)
+            slideView.autoPinEdge(toSuperviewEdge: .bottom)
+            slideView.autoMatch(.width, to: .width, of: carouselView)
+
+            // first slide
+            if previousSlideView == nil {
+               slideView.autoPinEdge(toSuperviewEdge: .left)
+            } else {
+               slideView.autoPinEdge(.left, to: .right, of: previousSlideView!)
+            }
+
+            previousSlideView = slideView
         }
+        // last slide
+        previousSlideView?.autoPinEdge(toSuperviewEdge: .right)
 
         // Previous button
         let previousButton = UIButton()
@@ -158,7 +181,7 @@ class ExperienceUpgradeViewController: UIViewController {
         dismissButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: ScaleFromIPhone5(4))
 
         // Debug
-        splashView.addRedBorderRecursively()
+//        splashView.addRedBorderRecursively()
     }
 
     // MARK: Carousel
@@ -194,21 +217,34 @@ class ExperienceUpgradeViewController: UIViewController {
         return currentSlideIndex < slideViews.count - 1
     }
 
-    func showCurrentSlide() {
-        Logger.debug("\(TAG) showing slide: \(currentSlideIndex)")
+    func updateSlideControls() {
         self.nextButton.isHidden = !hasNextSlide()
         self.previousButton.isHidden = !hasPreviousSlide()
-        //animateToSlide(index: currentSlideIndex)
+    }
+
+    func showCurrentSlide() {
+        Logger.debug("\(TAG) showing slide: \(currentSlideIndex)")
+        updateSlideControls()
+
+        // update the scroll view to the appropriate page
+        let bounds = carouselView.bounds
+
+        let point = CGPoint(x: bounds.width * CGFloat(currentSlideIndex), y: 0)
+        let pageBounds = CGRect(origin: point, size: bounds.size)
+
+        carouselView.scrollRectToVisible(pageBounds, animated: true)
     }
 
     // MARK: - Actions
 
     func didTapNextButton(sender: UIButton) {
         Logger.debug("\(TAG) in \(#function)")
+        showNextSlide()
     }
 
     func didTapPreviousButton(sender: UIButton) {
         Logger.debug("\(TAG) in \(#function)")
+        showPreviousSlide()
     }
 
     func didTapDismissButton(sender: UIButton) {
@@ -219,5 +255,19 @@ class ExperienceUpgradeViewController: UIViewController {
     func handleDismissGesture(sender: AnyObject) {
         Logger.debug("\(TAG) in \(#function)")
         self.dismiss(animated: true)
+    }
+
+
+    // MARK: - ScrollViewDelegate
+
+    // Upadate the slider controls to reflect which page we think we'll end up on.
+//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+                                   withVelocity velocity: CGPoint,
+                                   targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let pageWidth = scrollView.frame.size.width
+        let page = floor(targetContentOffset.pointee.x / pageWidth)
+        currentSlideIndex = Int(page)
+        updateSlideControls()
     }
 }
