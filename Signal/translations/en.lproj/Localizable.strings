@@ -956,7 +956,7 @@
 "UPGRADE_CAROUSEL_PREVIOUS_BUTTON" = "Show previous";
 
 /* Description of CallKit to upgrading (existing) users */
-"UPGRADE_EXPERIENCE_CALLKIT_DESCRIPTION" = "Answer calls directly from your lockscreen. No more swiping required!\n What's more? We've anonymized caller details to ensure you're not leaking data about who you're talking to.\n Read more in your privacy settings.";
+"UPGRADE_EXPERIENCE_CALLKIT_DESCRIPTION" = "No more swiping required - Answer calls directly from your lockscreen!\n\n What's more? We've anonymized caller details to ensure you're not leaking data about who you're talking to.\n\n Read more in your privacy settings.";
 
 /* Header for upgrade experience */
 "UPGRADE_EXPERIENCE_CALLKIT_TITLE" = "Answer Calls With One Touch";

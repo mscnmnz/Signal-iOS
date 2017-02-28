@@ -43,7 +43,13 @@ class ExperienceUpgradeViewController: UIViewController, UIScrollViewDelegate {
     func buildSlideView(header: String, body: String, image: UIImage) -> UIView {
         Logger.debug("\(TAG) in \(#function)")
 
+        let containerView = UIView()
+
         let slideView = UIView()
+        containerView.addSubview(slideView)
+
+        let containerPadding = ScaleFromIPhone5To7Plus(12, 24)
+        slideView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: containerPadding, left: containerPadding, bottom: containerPadding, right: containerPadding))
 
         // Title label
         let titleLabel = UILabel()
@@ -83,7 +89,7 @@ class ExperienceUpgradeViewController: UIViewController, UIScrollViewDelegate {
         imageView.autoPinEdge(.top, to: .bottom, of: titleLabel, withOffset: ScaleFromIPhone5To7Plus(24, 32))
         imageView.autoPinEdge(.bottom, to: .top, of: bodyLabel, withOffset: -ScaleFromIPhone5To7Plus(24, 32))
 
-        return slideView
+        return containerView
     }
 
     var carouselView: UIScrollView!
@@ -102,11 +108,7 @@ class ExperienceUpgradeViewController: UIViewController, UIScrollViewDelegate {
         self.carouselView.isPagingEnabled = true
         carouselView.showsHorizontalScrollIndicator = false
         carouselView.showsVerticalScrollIndicator = false
-
-        let containerPadding = ScaleFromIPhone5To7Plus(12, 24)
-        carouselView.autoPinEdge(toSuperviewEdge: .left, withInset: containerPadding)
-        carouselView.autoPinEdge(toSuperviewEdge: .top, withInset: containerPadding)
-        carouselView.autoPinEdge(toSuperviewEdge: .right, withInset: containerPadding)
+        carouselView.autoPinEdgesToSuperviewEdges()
 
         // Build slides for carousel
         var previousSlideView: UIView?
@@ -115,7 +117,7 @@ class ExperienceUpgradeViewController: UIViewController, UIScrollViewDelegate {
             self.slideViews.append(slideView)
             carouselView.addSubview(slideView)
 
-            slideView.autoPinEdge(toSuperviewEdge: .top)
+            slideView.autoPinEdge(toSuperviewEdge: .top, withInset: ScaleFromIPhone5(10))
             slideView.autoPinEdge(toSuperviewEdge: .bottom)
             slideView.autoMatch(.width, to: .width, of: carouselView)
 
@@ -144,8 +146,8 @@ class ExperienceUpgradeViewController: UIViewController, UIScrollViewDelegate {
 
         // Previous button layout
         previousButton.autoPinEdge(toSuperviewEdge: .left)
-        let arrowButtonOffset =  ScaleFromIPhone5To7Plus(-12, -18)
-        previousButton.autoAlignAxis(.horizontal, toSameAxisOf: carouselView, withOffset: arrowButtonOffset)
+        let arrowButtonInset = ScaleFromIPhone5(180)
+        previousButton.autoPinEdge(toSuperviewEdge: .top, withInset: arrowButtonInset)
 
         // Next button
         let nextButton = UIButton()
@@ -160,7 +162,7 @@ class ExperienceUpgradeViewController: UIViewController, UIScrollViewDelegate {
 
         // Next button layout
         nextButton.autoPinEdge(toSuperviewEdge: .right)
-        nextButton.autoAlignAxis(.horizontal, toSameAxisOf: carouselView, withOffset: arrowButtonOffset)
+        nextButton.autoPinEdge(toSuperviewEdge: .top, withInset: arrowButtonInset)
 
         // Dismiss button
         let dismissButton = UIButton()
@@ -171,11 +173,11 @@ class ExperienceUpgradeViewController: UIViewController, UIScrollViewDelegate {
 
         // Dismiss button layout
         dismissButton.autoPinWidthToSuperview()
-        dismissButton.autoPinEdge(.top, to: .bottom, of: carouselView, withOffset: ScaleFromIPhone5(4) + containerPadding)
-        dismissButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: ScaleFromIPhone5(16))
+        dismissButton.autoPinEdge(.top, to: .bottom, of: carouselView, withOffset: ScaleFromIPhone5(16))
+        dismissButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: ScaleFromIPhone5(32))
 
         // Debug
-        splashView.addRedBorderRecursively()
+//        splashView.addRedBorderRecursively()
     }
 
     // MARK: Carousel
