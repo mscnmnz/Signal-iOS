@@ -949,6 +949,15 @@
 /* No comment provided by engineer. */
 "UPDATE_BUTTON_TITLE" = "Update";
 
+/* accessability label for slide */
+"UPGRADE_CAROUSEL_NEXT_BUTTON" = "Show Next";
+
+/* Description of video calling experience to upgrading (existing) users */
+"UPGRADE_EXPERIENCE_VIDEO_DESCRIPTION" = "Signal now supports secure video calling. Just start a call like normal, then tap the camera button to start broadcasting. Enjoy!";
+
+/* Header for upgrade experience */
+"UPGRADE_EXPERIENCE_VIDEO_TITLE" = "Introducing Video Calls!";
+
 /* No comment provided by engineer. */
 "Upgrading Signal ..." = "Upgrading Signal ...";
 
