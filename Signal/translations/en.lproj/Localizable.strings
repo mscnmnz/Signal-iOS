@@ -956,16 +956,16 @@
 "UPGRADE_CAROUSEL_PREVIOUS_BUTTON" = "Show previous";
 
 /* Description of CallKit to upgrading (existing) users */
-"UPGRADE_EXPERIENCE_CALLKIT_DESCRIPTION" = "No more swiping required - Answer calls directly from your lockscreen!\n\n What's more? We've anonymized caller details to ensure you're not leaking data about who you're talking to.\n\n Read more in your privacy settings.";
+"UPGRADE_EXPERIENCE_CALLKIT_DESCRIPTION" = "Answer Signal calls directly from your lockscreen, just like a native call!\n\n What's more? We've anonymized caller details to ensure you're not leaking data about who you're talking to.\n\n Read more in your privacy settings.";
 
 /* Header for upgrade experience */
-"UPGRADE_EXPERIENCE_CALLKIT_TITLE" = "Answer Calls With One Touch";
+"UPGRADE_EXPERIENCE_CALLKIT_TITLE" = "Answer Calls with One Touch";
 
 /* Description of video calling to upgrading (existing) users */
-"UPGRADE_EXPERIENCE_VIDEO_DESCRIPTION" = "Signal now supports secure video calling. Just start a call like normal, then tap the camera button and wave hello.";
+"UPGRADE_EXPERIENCE_VIDEO_DESCRIPTION" = "Signal now supports secure video calling. Just start a call like normal, tap the camera button, and wave hello.";
 
 /* Header for upgrade experience */
-"UPGRADE_EXPERIENCE_VIDEO_TITLE" = "Introducing Secure Video Calls";
+"UPGRADE_EXPERIENCE_VIDEO_TITLE" = "Hello Secure Video Calls";
 
 /* No comment provided by engineer. */
 "Upgrading Signal ..." = "Upgrading Signal ...";
