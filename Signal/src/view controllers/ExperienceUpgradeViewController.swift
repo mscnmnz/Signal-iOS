@@ -57,7 +57,7 @@ class ExperienceUpgradeViewController: UIViewController, UIScrollViewDelegate {
 
         // Title label layout
         titleLabel.autoPinWidthToSuperview()
-        titleLabel.autoPinEdge(toSuperviewEdge: .top)
+        titleLabel.autoPinEdge(toSuperviewEdge: .top, withInset: ScaleFromIPhone5To7Plus(16, 32))
 
         // Body label
         let bodyLabel = UILabel()
@@ -91,14 +91,8 @@ class ExperienceUpgradeViewController: UIViewController, UIScrollViewDelegate {
         self.view = UIView()
         view.backgroundColor = UIColor.ows_materialBlue()
 
-        let splashContainerView = UIView()
-        view.addSubview(splashContainerView)
-        splashContainerView.autoPinWidthToSuperview()
-        splashContainerView.autoVCenterInSuperview()
-        splashContainerView.autoSetDimension(.height, toSize: ScaleFromIPhone5To7Plus(500, 800))
-
         let splashView = UIView()
-        splashContainerView.addSubview(splashView)
+        view.addSubview(splashView)
         splashView.autoPinEdgesToSuperviewEdges()
 
         let carouselView = UIScrollView()
@@ -178,10 +172,10 @@ class ExperienceUpgradeViewController: UIViewController, UIScrollViewDelegate {
         // Dismiss button layout
         dismissButton.autoPinWidthToSuperview()
         dismissButton.autoPinEdge(.top, to: .bottom, of: carouselView, withOffset: ScaleFromIPhone5(4) + containerPadding)
-        dismissButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: ScaleFromIPhone5(4))
+        dismissButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: ScaleFromIPhone5(16))
 
         // Debug
-//        splashView.addRedBorderRecursively()
+        splashView.addRedBorderRecursively()
     }
 
     // MARK: Carousel
