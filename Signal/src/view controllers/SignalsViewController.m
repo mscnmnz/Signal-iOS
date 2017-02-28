@@ -314,6 +314,12 @@ NSString *const SignalsViewControllerSegueShowIncomingCall = @"ShowIncomingCallS
     if (self.newlyRegisteredUser) {
         [self didAppearForNewlyRegisteredUser];
     } else {
+        // FIXME DEBUG while we're not marking as seen...
+        static BOOL shown = NO;
+        if (shown) {
+            return;
+        }
+        shown = YES;
         [self displayAnyUnseenUpgradeExperience];
     }
 }

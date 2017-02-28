@@ -9,6 +9,9 @@ class ExperienceUpgradeViewController: UIViewController {
 
     let experienceUpgrades: [ExperienceUpgrade]
 
+    var nextButton: UIButton!
+    var previousButton: UIButton!
+
     // MARK: - Initializers
     required init(experienceUpgrades: [ExperienceUpgrade]) {
         self.experienceUpgrades = experienceUpgrades
@@ -28,6 +31,7 @@ class ExperienceUpgradeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addDismissGesture()
+        showCurrentSlide()
     }
 
     func addDismissGesture() {
@@ -37,6 +41,8 @@ class ExperienceUpgradeViewController: UIViewController {
     }
 
     func buildSlideView(header: String, body: String, image: UIImage) -> UIView {
+        Logger.debug("\(TAG) in \(#function)")
+
         let slideView = UIView()
 
         // Title label
@@ -44,7 +50,7 @@ class ExperienceUpgradeViewController: UIViewController {
         slideView.addSubview(titleLabel)
         titleLabel.text = header
         titleLabel.textAlignment = .center
-        titleLabel.font = UIFont.ows_lightFont(withSize: ScaleFromIPhone5To7Plus(26, 32))
+        titleLabel.font = UIFont.ows_regularFont(withSize: ScaleFromIPhone5To7Plus(26, 32))
         titleLabel.textColor = UIColor.white
         titleLabel.minimumScaleFactor = 0.5
         titleLabel.adjustsFontSizeToFitWidth = true;
@@ -63,6 +69,8 @@ class ExperienceUpgradeViewController: UIViewController {
 
         // Body label layout
         bodyLabel.autoPinWidthToSuperview()
+        bodyLabel.autoPinEdge(toSuperviewEdge: .bottom)
+        bodyLabel.textAlignment = .center
 
         // Image
         let imageView = UIImageView(image: image)
@@ -71,9 +79,9 @@ class ExperienceUpgradeViewController: UIViewController {
 
         // Image layout
         imageView.autoPinWidthToSuperview()
-        imageView.autoSetDimension(.height, toSize: ScaleFromIPhone5To7Plus(200, 350))
-        imageView.autoPinEdge(.top, to: .bottom, of: titleLabel, withOffset: ScaleFromIPhone5To7Plus(10, 14))
-        imageView.autoPinEdge(.bottom, to: .top, of: bodyLabel, withOffset: ScaleFromIPhone5To7Plus(10, 14))
+        imageView.autoSetDimension(.height, toSize: ScaleFromIPhone5To7Plus(200, 280))
+        imageView.autoPinEdge(.top, to: .bottom, of: titleLabel, withOffset: ScaleFromIPhone5To7Plus(24, 32))
+        imageView.autoPinEdge(.bottom, to: .top, of: bodyLabel, withOffset: -ScaleFromIPhone5To7Plus(24, 32))
 
         return slideView
     }
@@ -89,59 +97,108 @@ class ExperienceUpgradeViewController: UIViewController {
 
         let splashView = UIView()
         splashContainerView.addSubview(splashView)
-        let containerPadding = ScaleFromIPhone5To7Plus(12, 18)
-        splashView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: containerPadding,
-                                                                   left: containerPadding,
-                                                                   bottom: containerPadding,
-                                                                   right: containerPadding))
+        splashView.autoPinEdgesToSuperviewEdges()
 
-        let slidesView = UIView()
-        splashView.addSubview(slidesView)
+        let carouselView = UIView()
+        splashView.addSubview(carouselView)
+        let containerPadding = ScaleFromIPhone5To7Plus(12, 24)
+        carouselView.autoPinEdge(toSuperviewEdge: .left, withInset: containerPadding)
+        carouselView.autoPinEdge(toSuperviewEdge: .top, withInset: containerPadding)
+        carouselView.autoPinEdge(toSuperviewEdge: .right, withInset: containerPadding)
 
         // TODO stack these horizontally so they can be panned through
         for experienceUpgrade in experienceUpgrades {
-            slidesView.addSubview(buildSlideView(header: experienceUpgrade.title, body: experienceUpgrade.body, image: experienceUpgrade.image))
+            let slideView = buildSlideView(header: experienceUpgrade.title, body: experienceUpgrade.body, image: experienceUpgrade.image)
+            self.slideViews.append(slideView)
+            carouselView.addSubview(slideView)
+            slideView.autoPinEdgesToSuperviewEdges()
         }
 
         // Previous button
         let previousButton = UIButton()
+        self.previousButton = previousButton
         splashView.addSubview(previousButton)
+        previousButton.isUserInteractionEnabled = true
         previousButton.setTitleColor(UIColor.white, for: .normal)
         previousButton.accessibilityLabel = NSLocalizedString("UPGRADE_CAROUSEL_PREVIOUS_BUTTON", comment: "accessibility label for arrow in slideshow")
-        previousButton.setTitle("◂", for: .normal)
-        previousButton.titleLabel?.font = UIFont.ows_lightFont(withSize:ScaleFromIPhone5To7Plus(24, 48))
+        previousButton.setTitle("‹", for: .normal)
+        previousButton.titleLabel?.font = UIFont.ows_mediumFont(withSize: ScaleFromIPhone5To7Plus(24, 48))
         previousButton.addTarget(self, action:#selector(didTapPreviousButton), for: .touchUpInside)
 
         // Previous button layout
         previousButton.autoPinEdge(toSuperviewEdge: .left)
-        previousButton.autoAlignAxis(.horizontal, toSameAxisOf: slidesView)
+        let arrowButtonOffset =  ScaleFromIPhone5To7Plus(-12, -18)
+        previousButton.autoAlignAxis(.horizontal, toSameAxisOf: carouselView, withOffset: arrowButtonOffset)
 
         // Next button
         let nextButton = UIButton()
+        self.nextButton = nextButton
         splashView.addSubview(nextButton)
+        nextButton.isUserInteractionEnabled = true
         nextButton.setTitleColor(UIColor.white, for: .normal)
         nextButton.accessibilityLabel = NSLocalizedString("UPGRADE_CAROUSEL_NEXT_BUTTON", comment: "accessibility label for arrow in slideshow")
-        nextButton.setTitle("▸", for: .normal)
-        nextButton.titleLabel?.font = UIFont.ows_lightFont(withSize:ScaleFromIPhone5To7Plus(24, 48))
+        nextButton.setTitle("›", for: .normal)
+        nextButton.titleLabel?.font = UIFont.ows_mediumFont(withSize: ScaleFromIPhone5To7Plus(24, 48))
         nextButton.addTarget(self, action:#selector(didTapNextButton), for: .touchUpInside)
 
         // Next button layout
         nextButton.autoPinEdge(toSuperviewEdge: .right)
-        nextButton.autoAlignAxis(.horizontal, toSameAxisOf: slidesView)
+        nextButton.autoAlignAxis(.horizontal, toSameAxisOf: carouselView, withOffset: arrowButtonOffset)
 
         // Dismiss button
         let dismissButton = UIButton()
         splashView.addSubview(dismissButton)
+        dismissButton.isUserInteractionEnabled = true
         dismissButton.setTitle(NSLocalizedString("DISMISS_BUTTON_TEXT", comment: ""), for: .normal)
         dismissButton.addTarget(self, action:#selector(didTapDismissButton), for: .touchUpInside)
 
         // Dismiss button layout
         dismissButton.autoPinWidthToSuperview()
-        dismissButton.autoPinEdge(.top, to: .bottom, of: slidesView, withOffset: ScaleFromIPhone5(4) + containerPadding)
+        dismissButton.autoPinEdge(.top, to: .bottom, of: carouselView, withOffset: ScaleFromIPhone5(4) + containerPadding)
         dismissButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: ScaleFromIPhone5(4))
 
         // Debug
         splashView.addRedBorderRecursively()
+    }
+
+    // MARK: Carousel
+
+    var currentSlideIndex = 0
+    var slideViews = [UIView]()
+
+    func showNextSlide() {
+        guard hasNextSlide() else {
+            Logger.debug("\(TAG) no next slide to show")
+            return;
+        }
+
+        currentSlideIndex += 1
+        showCurrentSlide()
+    }
+
+    func showPreviousSlide() {
+        guard hasPreviousSlide() else {
+            Logger.debug("\(TAG) no previous slide to show")
+            return
+        }
+
+        currentSlideIndex -= 1
+        showCurrentSlide()
+    }
+
+    func hasPreviousSlide() -> Bool {
+        return currentSlideIndex > 0
+    }
+
+    func hasNextSlide() -> Bool {
+        return currentSlideIndex < slideViews.count - 1
+    }
+
+    func showCurrentSlide() {
+        Logger.debug("\(TAG) showing slide: \(currentSlideIndex)")
+        self.nextButton.isHidden = !hasNextSlide()
+        self.previousButton.isHidden = !hasPreviousSlide()
+        //animateToSlide(index: currentSlideIndex)
     }
 
     // MARK: - Actions
