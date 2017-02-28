@@ -16,6 +16,7 @@ class ExperienceUpgradeViewController: UIViewController {
     var bodyLabel: UILabel!
     var splashImageView: UIImageView!
     var nextButton: UIButton!
+    var previousButton: UIButton!
     var dismissButton: UIButton!
 
     // MARK: - Initializers
@@ -78,20 +79,29 @@ class ExperienceUpgradeViewController: UIViewController {
         splashView.addSubview(splashImageView)
         splashImageView.contentMode = .scaleAspectFit
 
+        previousButton = UIButton()
+        splashView.addSubview(previousButton)
+        previousButton.setTitleColor(UIColor.white, for: .normal)
+        previousButton.accessibilityLabel = NSLocalizedString("UPGRADE_CAROUSEL_PREVIOUS_BUTTON", comment: "accessibility label for arrow in slideshow")
+        previousButton.setTitle("◀", for: .normal)
+        previousButton.titleLabel?.font = UIFont.ows_lightFont(withSize:ScaleFromIPhone5To7Plus(24, 32))
+        previousButton.addTarget(self, action:#selector(didTapPreviousButton), for: .touchUpInside)
+
         nextButton = UIButton()
         splashView.addSubview(nextButton)
-        nextButton.accessibilityLabel = NSLocalizedString("UPGRADE_CAROUSEL_NEXT_BUTTON", comment: "accessability label for slide")
-        nextButton.setTitle("▸", for: .normal)
+        nextButton.setTitleColor(UIColor.white, for: .normal)
+        nextButton.accessibilityLabel = NSLocalizedString("UPGRADE_CAROUSEL_NEXT_BUTTON", comment: "accessibility label for arrow in slideshow")
+        nextButton.setTitle("▶", for: .normal)
+        nextButton.titleLabel?.font = UIFont.ows_lightFont(withSize:ScaleFromIPhone5To7Plus(24, 32))
         nextButton.addTarget(self, action:#selector(didTapNextButton), for: .touchUpInside)
 
         dismissButton = UIButton()
         splashView.addSubview(dismissButton)
-        dismissButton.setTitle(NSLocalizedString("DISMISS_BUTTON_TEXT", comment: ""),
-                            for: .normal)
+        dismissButton.setTitle(NSLocalizedString("DISMISS_BUTTON_TEXT", comment: ""), for: .normal)
         dismissButton.addTarget(self, action:#selector(didTapDismissButton), for: .touchUpInside)
 
         // Debug
-//        splashView.addRedBorderRecursively()
+        splashView.addRedBorderRecursively()
     }
 
     override func updateViewConstraints() {
@@ -108,7 +118,7 @@ class ExperienceUpgradeViewController: UIViewController {
                                                                        right: containerPadding))
 
             nextButton.autoPinEdge(toSuperviewEdge: .right)
-            nextButton.autoAlignAxis(.vertical, toSameAxisOf: splashImageView)
+            nextButton.autoAlignAxis(.horizontal, toSameAxisOf: splashImageView)
 
             titleLabel.autoPinWidthToSuperview()
             titleLabel.autoPinEdge(toSuperviewEdge: .top)
@@ -131,6 +141,10 @@ class ExperienceUpgradeViewController: UIViewController {
     // MARK: - Actions
 
     func didTapNextButton(sender: UIButton) {
+        Logger.debug("\(TAG) in \(#function)")
+    }
+
+    func didTapPreviousButton(sender: UIButton) {
         Logger.debug("\(TAG) in \(#function)")
     }
 
