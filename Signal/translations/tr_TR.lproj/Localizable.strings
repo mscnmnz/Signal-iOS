@@ -956,3 +956,54 @@
 
 /* Info message embedding a {{time amount}}, see the *_TIME_AMOUNT strings for context. */
 "YOU_UPDATED_DISAPPEARING_MESSAGES_CONFIGURATION" = "Kaybolan mesaj süresini %@ olarak ayarladın.";
+
+/* Label indicating the phone number currently being verified. */
+"VERIFICATION_PHONE_NUMBER_FORMAT" = "Onaylanıyor: %@";
+
+/* button text for back button on verification view */
+"VERIFICATION_BACK_BUTTON" = "Geri";
+
+/* Explanation of the 'CallKit Privacy` preference. */
+"SETTINGS_SECTION_CALL_KIT_PRIVACY_DESCRIPTION" = "Aramalarınız Callkit sayesinde kilit ekranından cevaplayabilirsiniz. Bu seçenek kullanılırken dikkatli olun. iCloud aramalar ile ilgili meta veri topluyor olabilir.";
+
+/* Label for 'CallKit privacy' preference */
+"SETTINGS_PRIVACY_CALLKIT_PRIVACY_TITLE" = "İsim ve Numara";
+
+/* Accessibility hint for the settings button */
+"SETTINGS_BUTTON_ACCESSIBILITY" = "Ayarlar";
+
+/* Table cell label */
+"SETTINGS_CALLING_HIDES_IP_ADDRESS_PREFERENCE_TITLE" = "IP adresini gizle";
+
+/* User settings section footer, a detailed explanation */
+"SETTINGS_CALLING_HIDES_IP_ADDRESS_PREFERENCE_TITLE_DETAIL" = "IP adresinizi saklamak görüntü kalitesini düşürür.";
+
+/* The subtitle for the messages view title indicates that the title can be tapped to access settings for this conversation. */
+"MESSAGES_VIEW_TITLE_SUBTITLE" = "Bilgileri Göster";
+
+/* Error mesage indicating that message send is disabled due to prekey update failures */
+"ERROR_DESCRIPTION_MESSAGE_SEND_DISABLED_PREKEY_UPDATE_FAILURES" = "Bir hata oluştu";
+
+/* Short name for edit menu item to share contents of media message. */
+"EDIT_ITEM_SHARE_ACTION" = "Paylaş";
+
+/* Short name for edit menu item to copy contents of media message. */
+"EDIT_ITEM_COPY_ACTION" = "Kopyala";
+
+/* Accessibility label for the create group new group button */
+"CREATE_NEW_GROUP" = "Yeni Grup Oluştur";
+
+/* Reminder to the user of the benefits of enabling CallKit and disabling CallKit privacy. */
+"CALL_VIEW_SETTINGS_NAG_DESCRIPTION_ALL" = "Bu ayar ile ekranınız kapalıyken gelen aramaları cevaplayabilirsiniz.\n\nGizlilik ayarlarını kontrol edin.";
+
+/* Reminder to the user of the benefits of disabling CallKit privacy. */
+"CALL_VIEW_SETTINGS_NAG_DESCRIPTION_PRIVACY" = "Bu ayarı değiştirirseniz arayanların isim ve telefonlarını görebilirsiniz.\n\nGizlilik ayarını kontrol edin.";
+
+/* Label for button that dismiss the call view's settings nag. */
+"CALL_VIEW_SETTINGS_NAG_NOT_NOW_BUTTON" = "Şimdi Değil";
+
+/* Label for button that shows the privacy settings */
+"CALL_VIEW_SETTINGS_NAG_SHOW_CALL_SETTINGS" = "Gizlilik Ayarını Göster";
+
+/* The generic name used for calls if CallKit privacy is enabled */
+"CALLKIT_ANONYMOUS_CONTACT_NAME" = "Signal User";
